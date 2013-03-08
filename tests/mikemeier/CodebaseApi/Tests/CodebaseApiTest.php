@@ -2,23 +2,42 @@
 
 namespace mikemeier\CodebaseApi\Tests;
 
-use Payment\HttpClient\HttpClientInterface;
-
 use mikemeier\CodebaseApi\CodebaseApi;
+use mikemeier\CodebaseApi\Result\ActivityFeed\Event;
+
+use Payment\HttpClient\HttpClientInterface;
 use Payment\HttpClient\BuzzClient;
 
 class CodebaseApiTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCredentials()
+    public function testConstructor()
     {
         $credentials = $this->getCredentials();
+        $authorization = 'Basic '. base64_encode($credentials['username'].':'.$credentials['key']);
+
         $httpClient = $this->getHttpClient();
 
         $codebaseApi = new CodebaseApi($credentials['username'], $credentials['key'], $httpClient);
 
-        $this->assertAttributeSame($credentials['username'], 'username', $codebaseApi, 'Username not saved');
-        $this->assertAttributeSame($credentials['key'], 'key', $codebaseApi, 'Key not saved');
-        $this->assertAttributeSame($httpClient, 'httpClient', $codebaseApi, 'HttpClient not saved');
+        $this->assertAttributeSame($authorization, 'authorization', $codebaseApi, 'Authorization not correct');
+        $this->assertAttributeSame($httpClient, 'httpClient', $codebaseApi, 'HttpClient not set');
+    }
+
+    public function testGetActivityFeed()
+    {
+        $codebaseApi = $this->getCodebaseApi();
+        var_dump($codebaseApi->getActivityFeed()->getEvents());
+    }
+
+    /**
+     * @return CodebaseApi
+     */
+    private function getCodebaseApi()
+    {
+        $credentials = $this->getCredentials();
+        $httpClient = $this->getHttpClient();
+
+        return new CodebaseApi($credentials['username'], $credentials['key'], $httpClient);
     }
 
     /**
