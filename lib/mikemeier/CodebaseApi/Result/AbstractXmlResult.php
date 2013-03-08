@@ -9,30 +9,17 @@ use SimpleXMLElement;
 abstract class AbstractXmlResult extends AbstractResult
 {
     /**
-     * @var SimpleXMLElement
-     */
-    protected $data;
-
-    /**
      * @var string
      */
     protected $expectedContentType = 'application/xml';
 
-    protected function setData()
+    protected function data()
     {
-        if(!$this->data = @simplexml_load_string($this->getResponse()->getContent())){
+        if(!$data = @simplexml_load_string($this->getResponse()->getContent())){
             throw new ContentException("Content is not readable for simplexml");
         }
-        $this->process();
+        $this->process($data);
     }
 
-    /**
-     * @return SimpleXMLElement
-     */
-    protected function getData()
-    {
-        return $this->data;
-    }
-
-    abstract protected function process();
+    abstract protected function process(SimpleXMLElement $data);
 }

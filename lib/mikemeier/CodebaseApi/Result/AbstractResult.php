@@ -25,7 +25,7 @@ abstract class AbstractResult
     {
         $this->reponse = $response;
         $this->checkContentType();
-        $this->setData();
+        $this->data();
     }
 
     /**
@@ -56,5 +56,5 @@ abstract class AbstractResult
         return $this->expectedContentType;
     }
 
-    abstract protected function setData();
+    abstract protected function data();
 }

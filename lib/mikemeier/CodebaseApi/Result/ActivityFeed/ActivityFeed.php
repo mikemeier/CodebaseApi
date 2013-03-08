@@ -4,6 +4,7 @@ namespace mikemeier\CodebaseApi\Result\ActivityFeed;
 
 use mikemeier\CodebaseApi\Result\AbstractXmlResult;
 
+use SimpleXMLElement;
 use DateTime;
 
 class ActivityFeed extends AbstractXmlResult
@@ -13,9 +14,11 @@ class ActivityFeed extends AbstractXmlResult
      */
     protected $events = array();
 
-    protected function process()
+    /**
+     * @param SimpleXMLElement $data
+     */
+    protected function process(SimpleXMLElement $data)
     {
-        $data = $this->getData();
         foreach($data->event as $event) {
             $this->events[] = new Event(
                 (string)$event->title,
@@ -35,6 +38,7 @@ class ActivityFeed extends AbstractXmlResult
     }
 
     /**
+     * @param string $type
      * @return Event[]
      */
     public function getEvents($type = null)

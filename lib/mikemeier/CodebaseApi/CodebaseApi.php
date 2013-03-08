@@ -5,6 +5,9 @@ namespace mikemeier\CodebaseApi;
 use Payment\HttpClient\HttpClientInterface;
 use Payment\HttpClient\ResponseInterface;
 
+use mikemeier\CodebaseApi\Result\Ticket\TicketBag;
+use mikemeier\CodebaseApi\Request\Ticket\TicketOptions;
+
 use mikemeier\CodebaseApi\Result\ActivityFeed\ActivityFeed;
 
 use mikemeier\CodebaseApi\Exception\AccessDeniedException;
@@ -45,6 +48,55 @@ class CodebaseApi implements CodebaseApiInterface
     }
 
     /**
+     * @param TicketOptions $options
+     * @return TicketBag
+     */
+    public function getTicketBag(TicketOptions $options)
+    {
+        return new TicketBag($this->request($this->getTicketUrl($options)));
+    }
+
+    /**
+     * @param string $projectName
+     * @param array $options
+     * @return TicketOptions
+     */
+    public function createTicketOptions($projectName, array $options = array())
+    {
+        return new TicketOptions($projectName, $options);
+    }
+
+    /**
+     * @param string $projectName
+     * @return string
+     */
+    protected function getActivityFeedUrl($projectName = null)
+    {
+        $suffix = '/activity';
+        if(!$projectName){
+            return $this->getCodebaseUrl().$suffix;
+        }
+        return $this->getCodebaseUrl().'/'.$projectName.$suffix;
+    }
+
+    /**
+     * @param TicketOptions $options
+     * @return string
+     */
+    protected function getTicketUrl(TicketOptions $options)
+    {
+        return $this->getCodebaseUrl().'/'.$options->getProjectName().'/tickets?query='. $options->getQuery();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getCodebaseUrl()
+    {
+        return self::CODEBASE_URL;
+    }
+
+    /**
      * @param $url
      * @return ResponseInterface
      * @throws InvalidStatusCodeException
@@ -76,26 +128,5 @@ class CodebaseApi implements CodebaseApiInterface
                 throw new InvalidStatusCodeException("Statuscode $statusCode invalid");
                 break;
         }
-    }
-
-    /**
-     * @param string $projectName
-     * @return string
-     */
-    protected function getActivityFeedUrl($projectName = null)
-    {
-        $suffix = '/activity';
-        if(!$projectName){
-            return $this->getCodebaseUrl().$suffix;
-        }
-        return $this->getCodebaseUrl().'/'.$projectName.$suffix;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getCodebaseUrl()
-    {
-        return self::CODEBASE_URL;
     }
 }
