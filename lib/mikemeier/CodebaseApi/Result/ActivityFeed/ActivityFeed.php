@@ -2,12 +2,11 @@
 
 namespace mikemeier\CodebaseApi\Result\ActivityFeed;
 
-use mikemeier\CodebaseApi\Result\AbstractXmlResult;
+use mikemeier\CodebaseApi\Result\AbstractResult;
 
-use SimpleXMLElement;
 use DateTime;
 
-class ActivityFeed extends AbstractXmlResult
+class ActivityFeed extends AbstractResult
 {
     /**
      * @var Event[]
@@ -15,24 +14,25 @@ class ActivityFeed extends AbstractXmlResult
     protected $events = array();
 
     /**
-     * @param SimpleXMLElement $data
+     * @param array $json
      */
-    protected function process(SimpleXMLElement $data)
+    protected function process(array $json)
     {
-        foreach($data->event as $event) {
+        foreach($json as $event) {
+            $event = $event['event'];
             $this->events[] = new Event(
-                (string)$event->title,
-                (int)$event->id,
-                new DateTime((string)$event->timestamp),
-                (string)$event->type,
-                (string)$event->htmlTitle,
-                (string)$event->htmlText,
-                (int)$event->userId,
-                (string)$event->actorEmail,
-                (string)$event->actorName,
-                (int)$event->projectId,
-                $event->deleted === "false",
-                (string)$event->avatarUrl
+                $event['title'],
+                (int)$event['id'],
+                new DateTime($event['timestamp']),
+                $event['type'],
+                $event['html_title'],
+                $event['html_text'],
+                (int)$event['user_id'],
+                $event['actor_email'],
+                $event['actor_name'],
+                (int)$event['project_id'],
+                $event['deleted'] === "false",
+                $event['avatar_url']
             );
         }
     }

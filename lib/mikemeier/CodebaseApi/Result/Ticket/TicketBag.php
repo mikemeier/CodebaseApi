@@ -2,12 +2,11 @@
 
 namespace mikemeier\CodebaseApi\Result\Ticket;
 
-use mikemeier\CodebaseApi\Result\AbstractXmlResult;
+use mikemeier\CodebaseApi\Result\AbstractResult;
 
 use DateTime;
-use SimpleXMLElement;
 
-class TicketBag extends AbstractXmlResult
+class TicketBag extends AbstractResult
 {
     /**
      * @var Ticket[]
@@ -15,22 +14,22 @@ class TicketBag extends AbstractXmlResult
     protected $tickets = array();
 
     /**
-     * @param SimpleXMLElement $data
+     * @param array $json
      */
-    protected function process(SimpleXMLElement $data)
+    protected function process(array $json)
     {
-        foreach($data as $ticket){
-            $ticket = (array)$ticket;
+        foreach($json as $ticket){
+            $ticket = $ticket['ticket'];
 
-            $category = (array)$ticket['category'];
-            $priority = (array)$ticket['priority'];
-            $status = (array)$ticket['status'];
+            $category = $ticket['category'];
+            $priority = $ticket['priority'];
+            $status = $ticket['status'];
 
             $this->tickets[] = new Ticket(
-                $ticket['ticket-id'],
-                $ticket['project-id'],
+                $ticket['ticket_id'],
+                $ticket['project_id'],
                 $ticket['summary'],
-                $ticket['ticket-type'],
+                $ticket['ticket_type'],
                 $ticket['assignee'],
                 $ticket['reporter'],
                 new TicketCategory(
@@ -51,8 +50,8 @@ class TicketBag extends AbstractXmlResult
                     (int)$status['order'],
                     $status['treat-as-closed'] === "true"
                 ),
-                new DateTime($ticket['updated-at']),
-                new DateTime($ticket['created-at'])
+                new DateTime($ticket['updated_at']),
+                new DateTime($ticket['created_at'])
             );
         }
     }

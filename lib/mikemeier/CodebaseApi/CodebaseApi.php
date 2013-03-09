@@ -72,7 +72,7 @@ class CodebaseApi implements CodebaseApiInterface
      */
     protected function getActivityFeedUrl($projectName = null)
     {
-        $suffix = '/activity';
+        $suffix = '/activity?format=json';
         if(!$projectName){
             return $this->getCodebaseUrl().$suffix;
         }
@@ -85,7 +85,7 @@ class CodebaseApi implements CodebaseApiInterface
      */
     protected function getTicketUrl(TicketOptions $options)
     {
-        return $this->getCodebaseUrl().'/'.$options->getProjectName().'/tickets?query='. $options->getQuery();
+        return $this->getCodebaseUrl().'/'.$options->getProjectName().'/tickets?format=json&query='. $options->getQuery();
     }
 
     /**
