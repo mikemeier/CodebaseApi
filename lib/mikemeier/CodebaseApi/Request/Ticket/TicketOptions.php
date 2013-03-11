@@ -14,9 +14,24 @@ class TicketOptions
     const OPTION_ASSIGNEE = 'assignee';
 
     /**
-     * Status of the ticket
+     * Resolution of the ticket
      */
     const OPTION_RESOLUTION = 'resolution';
+
+    /**
+     * Status of the ticket
+     */
+    const OPTION_STATUS = 'status';
+
+    /**
+     * Milestone of the ticket
+     */
+    const OPTION_MILESTONE = 'milestone';
+
+    /**
+     * Category of the ticket
+     */
+    const OPTION_CATEGORY = 'category';
 
     /**
      *  Ticket id
@@ -47,8 +62,8 @@ class TicketOptions
         ASSIGNEE_ME = 'me';
 
     const
-        RESOLUTION_CLOSED = 'closed',
-        RESOLUTION_OPEN = 'open';
+        RESOLUTION_ACTIVE = 'active',
+        RESOLUTION_RESOLVED = 'resolved';
 
     const
         SORT_PRIORITY = 'priority',
@@ -78,13 +93,20 @@ class TicketOptions
     protected $options = array();
 
     /**
+     * @var int
+     */
+    protected $limit;
+
+    /**
      * @param string $projectName
      * @param array $options
+     * @param int $limit
      * @throws MethodNotFoundException
      */
-    public function __construct($projectName, array $options = array())
+    public function __construct($projectName, array $options = array(), $limit = null)
     {
         $this->projectName = $projectName;
+        $this->limit = $limit;
 
         foreach($options as $key => $value){
             $method = 'set'. ucfirst($key);
@@ -104,13 +126,22 @@ class TicketOptions
     }
 
     /**
-     * @param string $assignee
+     * @param $assignee
      * @return TicketOptions
      */
     public function setAssignee($assignee)
     {
-        $this->options[self::OPTION_ASSIGNEE] = $assignee;
+        $this->options[self::OPTION_ASSIGNEE] = $this->getNormalizedAssignee($assignee);
         return $this;
+    }
+
+    /**
+     * @param $assignee
+     * @return string
+     */
+    public function getNormalizedAssignee($assignee)
+    {
+        return str_replace(" ", "", $assignee);
     }
 
     /**
@@ -119,6 +150,44 @@ class TicketOptions
     public function removeAssignee()
     {
         unset($this->options[self::OPTION_ASSIGNEE]);
+        return $this;
+    }
+
+    /**
+     * @param string $milestone
+     * @return TicketOptions
+     */
+    public function setMilestone($milestone)
+    {
+        $this->options[self::OPTION_MILESTONE] = $milestone;
+        return $this;
+    }
+
+    /**
+     * @return TicketOptions
+     */
+    public function removeMilestone()
+    {
+        unset($this->options[self::OPTION_MILESTONE]);
+        return $this;
+    }
+
+    /**
+     * @param string $category
+     * @return TicketOptions
+     */
+    public function setCategory($category)
+    {
+        $this->options[self::OPTION_CATEGORY] = $category;
+        return $this;
+    }
+
+    /**
+     * @return TicketOptions
+     */
+    public function removeCategory()
+    {
+        unset($this->options[self::OPTION_CATEGORY]);
         return $this;
     }
 
@@ -142,7 +211,26 @@ class TicketOptions
     }
 
     /**
-     * @param integer $id
+     * @param string $status
+     * @return TicketOptions
+     */
+    public function setStatus($status)
+    {
+        $this->options[self::OPTION_STATUS] = $status;
+        return $this;
+    }
+
+    /**
+     * @return TicketOptions
+     */
+    public function removeStatus()
+    {
+        unset($this->options[self::OPTION_STATUS]);
+        return $this;
+    }
+
+    /**
+     * @param int $id
      * @return TicketOptions
      */
     public function setId($id)
@@ -240,6 +328,7 @@ class TicketOptions
     }
 
     /**
+     * @param string $separator
      * @return string
      */
     public function getQuery($separator = self::QUERY_OPTIONS_SEPARATOR)
@@ -249,5 +338,24 @@ class TicketOptions
             $queryPieces[] = $key.':"'. $value .'"';
         }
         return implode($separator, $queryPieces);
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @param int $limit
+     * @return TicketOptions
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+
+        return $this;
     }
 }
