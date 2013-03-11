@@ -67,7 +67,7 @@ class Event
     protected $title;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -92,7 +92,7 @@ class Event
     protected $htmlText;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $userId;
 
@@ -107,7 +107,7 @@ class Event
     protected $actorName;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $projectId;
 
@@ -123,15 +123,15 @@ class Event
 
     /**
      * @param string $title
-     * @param integer $id
+     * @param int $id
      * @param DateTime $timestamp
      * @param string $type
      * @param string $htmlTitle
      * @param string $htmlText
-     * @param integer $userId
+     * @param int $userId
      * @param string $actorEmail
      * @param string $actorName
-     * @param integer $projectId
+     * @param int $projectId
      * @param string $deleted
      * @param string $avatarUrl
      */
@@ -200,7 +200,7 @@ class Event
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {

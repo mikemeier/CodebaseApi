@@ -5,7 +5,7 @@ namespace mikemeier\CodebaseApi\Result\Ticket;
 class TicketPriority
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -25,16 +25,16 @@ class TicketPriority
     protected $default;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $position;
 
     /**
-     * @param integer $id
+     * @param int $id
      * @param string $name
      * @param string $color
      * @param bool $default
-     * @param integer $position
+     * @param int $position
      */
     public function __construct($id, $name, $color, $default, $position)
     {
@@ -46,7 +46,7 @@ class TicketPriority
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -78,7 +78,7 @@ class TicketPriority
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getPosition()
     {

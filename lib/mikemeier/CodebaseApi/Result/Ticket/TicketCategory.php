@@ -5,7 +5,7 @@ namespace mikemeier\CodebaseApi\Result\Ticket;
 class TicketCategory
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $id;
 
@@ -15,7 +15,7 @@ class TicketCategory
     protected $name;
 
     /**
-     * @param integer $id
+     * @param int $id
      * @param string $name
      */
     public function __construct($id, $name)
@@ -25,7 +25,7 @@ class TicketCategory
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {

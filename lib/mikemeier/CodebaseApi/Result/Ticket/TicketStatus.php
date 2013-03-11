@@ -20,7 +20,7 @@ class TicketStatus
     protected $color;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $order;
 
@@ -30,10 +30,10 @@ class TicketStatus
     protected $treatAsClosed;
 
     /**
-     * @param integer $id
+     * @param int $id
      * @param string $name
      * @param string $color
-     * @param integer $order
+     * @param int $order
      * @param bool $treatAsClosed
      */
     public function __construct($id, $name, $color, $order, $treatAsClosed)
@@ -46,7 +46,7 @@ class TicketStatus
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -70,7 +70,7 @@ class TicketStatus
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getOrder()
     {

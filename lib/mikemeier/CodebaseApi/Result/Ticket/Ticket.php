@@ -7,12 +7,12 @@ use DateTime;
 class Ticket
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $id;
 
     /*
-     * @var integer
+     * @var int
      */
     protected $projectId;
 
@@ -62,8 +62,8 @@ class Ticket
     protected $createdAt;
 
     /**
-     * @param integer $id
-     * @param integer $projectId
+     * @param int $id
+     * @param int $projectId
      * @param string $summary
      * @param string $type
      * @param string $assignee
@@ -101,7 +101,7 @@ class Ticket
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
