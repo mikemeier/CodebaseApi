@@ -11,7 +11,6 @@ class MyTodosCommand extends AbstractContextCommand
     protected function configure()
     {
         parent::configure();
-
         $this
             ->setName('mikemeier:codebase:mytodos')
             ->addArgument('projectName', InputArgument::REQUIRED, 'Name in URL from Codebase')

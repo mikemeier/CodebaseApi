@@ -30,7 +30,7 @@ abstract class AbstractContextCommand extends AbstractCommand
 
     /**
      * @param Context $context
-     * @return AbstractCommand
+     * @return AbstractContextCommand
      */
     protected function setContext(Context $context = null)
     {
