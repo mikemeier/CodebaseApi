@@ -4,15 +4,22 @@ namespace mikemeier\CodebaseApi;
 
 use Payment\HttpClient\HttpClientInterface;
 use Payment\HttpClient\ResponseInterface;
+use Payment\HttpClient\NullResponse;
 
 use mikemeier\CodebaseApi\Result\Ticket\TicketBag;
-use mikemeier\CodebaseApi\Request\Ticket\TicketOptions;
-
+use mikemeier\CodebaseApi\Result\Ticket\TicketStatusBag;
+use mikemeier\CodebaseApi\Result\Ticket\TicketPriorityBag;
+use mikemeier\CodebaseApi\Result\Ticket\TicketCategoryBag;
 use mikemeier\CodebaseApi\Result\ActivityFeed\ActivityFeed;
+
+use mikemeier\CodebaseApi\Request\Schema;
+use mikemeier\CodebaseApi\Request\Ticket\TicketOptions;
+use mikemeier\CodebaseApi\Request\Ticket\TicketUpdate;
 
 use mikemeier\CodebaseApi\Exception\AccessDeniedException;
 use mikemeier\CodebaseApi\Exception\NotFoundException;
 use mikemeier\CodebaseApi\Exception\UnprocessableEntityException;
+use mikemeier\CodebaseApi\Exception\InvalidStatusCodeException;
 
 class CodebaseApi implements CodebaseApiInterface
 {
@@ -53,7 +60,13 @@ class CodebaseApi implements CodebaseApiInterface
      */
     public function getTicketBag(TicketOptions $options)
     {
-        return new TicketBag($this->request($this->getTicketUrl($options)));
+        try {
+            $response = $this->request($this->getTicketUrl($options));
+        }catch(NotFoundException $e){
+            // Empty result - no tickets found
+            $response = new NullResponse(200, 'application/json', json_encode(array()), array());
+        }
+        return new TicketBag($response);
     }
 
     /**
@@ -64,6 +77,101 @@ class CodebaseApi implements CodebaseApiInterface
     public function createTicketOptions($projectName, array $options = array())
     {
         return new TicketOptions($projectName, $options);
+    }
+
+    /**
+     * @param string $projectName
+     * @return TicketStatusBag
+     */
+    public function getTicketStatusBag($projectName)
+    {
+        return new TicketStatusBag($this->request($this->getTicketStatusesUrl($projectName)));
+    }
+
+    /**
+     * @param string $projectName
+     * @return Result\Ticket\TicketPriorityBag
+     */
+    public function getTicketPriorityBag($projectName)
+    {
+        return new TicketPriorityBag($this->request($this->getTicketPrioritiesUrl($projectName)));
+    }
+
+    /**
+     * @param string $projectName
+     * @return TicketCategoryBag
+     */
+    public function getTicketCategoryBag($projectName)
+    {
+        return new TicketCategoryBag($this->request($this->getTicketCategoriesUrl($projectName)));
+    }
+
+    /**
+     * @param TicketUpdate $ticketUpdate
+     */
+    public function updateTicket(TicketUpdate $ticketUpdate)
+    {
+        $xml = $ticketUpdate->getXML();
+
+        $response = $this->request(
+            $this->getTicketUpdateUrl($ticketUpdate->getProjectName(), $ticketUpdate->getTicketId()),
+            HttpClientInterface::METHOD_POST,
+            $xml,
+            array(
+                'Content-Type: application/xml',
+                'Content-Length: '. strlen($xml)
+            )
+        );
+
+        var_dump($response);
+    }
+
+    /**
+     * @param string $projectName
+     * @param int $ticketId
+     * @param Schema $schema
+     * @return TicketUpdate
+     */
+    public function createTicketUpdate($projectName, $ticketId, Schema $schema = null)
+    {
+        return new TicketUpdate($projectName, $ticketId, $schema);
+    }
+
+    /**
+     * @param string $projectName
+     * @param string $ticketId
+     * @return string
+     */
+    protected function getTicketUpdateUrl($projectName, $ticketId)
+    {
+        return $this->getCodebaseUrl().'/'. $projectName .'/tickets/'. $ticketId.'/notes';
+    }
+
+    /**
+     * @param string $projectName
+     * @return string
+     */
+    protected function getTicketStatusesUrl($projectName)
+    {
+        return $this->getCodebaseUrl().'/'. $projectName .'/tickets/statuses?format=json';
+    }
+
+    /**
+     * @param string $projectName
+     * @return string
+     */
+    protected function getTicketPrioritiesUrl($projectName)
+    {
+        return $this->getCodebaseUrl().'/'. $projectName .'/tickets/priorities?format=json';
+    }
+
+    /**
+     * @param string $projectName
+     * @return string
+     */
+    protected function getTicketCategoriesUrl($projectName)
+    {
+        return $this->getCodebaseUrl().'/'. $projectName .'/tickets/categories?format=json';
     }
 
     /**
@@ -97,22 +205,28 @@ class CodebaseApi implements CodebaseApiInterface
     }
 
     /**
-     * @param $url
+     * @param string $url
+     * @param string $method
+     * @param string $content
+     * @param array $headers
      * @return ResponseInterface
-     * @throws InvalidStatusCodeException
      * @throws UnprocessableEntityException
      * @throws NotFoundException
+     * @throws InvalidStatusCodeException
      * @throws AccessDeniedException
      */
-    protected function request($url)
+    protected function request($url, $method = HttpClientInterface::METHOD_GET, $content = null, array $headers = array())
     {
-        $response = $this->httpClient->request(HttpClientInterface::METHOD_GET, $url, null, array(
+        $headers = array_merge($headers, array(
             self::HTTP_AUTH_BASIC_HEADER.': '. $this->authorization
         ));
 
+        $response = $this->httpClient->request($method, $url, $content, $headers);
         $statusCode = $response->getStatusCode();
+
         switch($statusCode) {
             case 200:
+            case 201:
                 return $response;
                 break;
             case 401:

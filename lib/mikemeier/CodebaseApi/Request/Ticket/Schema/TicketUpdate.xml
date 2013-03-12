@@ -1,0 +1,12 @@
+<ticket-note>
+    <content>{{CONTENT}}</content>
+    <time-added>{{TIME_ADDED}}</time-added>
+    <changes>
+        <status-id>{{STATUS_ID}}</status-id>
+        <priority-id>{{PRIORITY_ID}}</priority-id>
+        <category-id>{{CATEGORY_ID}}</category-id>
+        <assignee-id>{{ASSIGNEE_ID}}</assignee-id>
+        <milestone-id>{{MILESTONE_ID}}</milestone-id>
+        <summary>{{SUMMARY}}</summary>
+    </changes>
+</ticket-note>

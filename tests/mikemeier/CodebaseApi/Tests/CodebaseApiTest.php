@@ -35,12 +35,40 @@ class CodebaseApiTest extends \PHPUnit_Framework_TestCase
     {
         $codebaseApi = $this->getCodebaseApi();
 
-        $ticketOptions = $codebaseApi->createTicketOptions('key-of-aurora-koa', array(
-            TicketOptions::OPTION_ASSIGNEE => TicketOptions::ASSIGNEE_ME,
-            TicketOptions::OPTION_UPDATE => new DateTime('yesterday')
+        $ticketOptions = $codebaseApi->createTicketOptions($this->getProjectName(), array(
+            TicketOptions::OPTION_RESOLUTION => TicketOptions::RESOLUTION_RESOLVED,
+            TicketOptions::OPTION_UPDATE => new DateTime()
         ));
 
-        print_r($codebaseApi->getTicketBag($ticketOptions)->getTickets());
+        //$this->assertInternalType('array', $codebaseApi->getTicketBag($ticketOptions)->getTickets(), 'Tickets not an array');
+    }
+
+    public function testGetTicketStatusBag()
+    {
+        $codebaseApi = $this->getCodebaseApi();
+        //$this->assertInternalType('array', $codebaseApi->getTicketStatusBag($this->getProjectName())->getStatus(), 'TicketStatus not an array');
+    }
+
+    public function testGetTicketPriorityBag()
+    {
+        $codebaseApi = $this->getCodebaseApi();
+        //$this->assertInternalType('array', $codebaseApi->getTicketPriorityBag($this->getProjectName())->getPriorities(), 'TicketPriority not an array');
+    }
+
+    public function testGetTicketCategoryBag()
+    {
+        $codebaseApi = $this->getCodebaseApi();
+        //$this->assertInternalType('array', $codebaseApi->getTicketCategoryBag($this->getProjectName())->getCategories(), 'TicketPriority not an array');
+    }
+
+    public function testUpdateTicket()
+    {
+        $codebaseApi = $this->getCodebaseApi();
+
+        $update = $codebaseApi->createTicketUpdate($this->getProjectName(), 19);
+        $update->setContent('taxNumber weg, backend andere Übersetzung als Frontend für codiceFiscale, b2c checkbox weg, wenn IT ein Dealer erstellt: PW verstecken, JS Firma Hack weg: Immer Firma');
+
+        //$codebaseApi->updateTicket($update);
     }
 
     /**
@@ -68,5 +96,11 @@ class CodebaseApiTest extends \PHPUnit_Framework_TestCase
     private function getCredentials()
     {
         return require __DIR__.'/../../../../credentials.php';
+    }
+
+    private function getProjectName()
+    {
+        $credentials = $this->getCredentials();
+        return $credentials['projectName'];
     }
 }
