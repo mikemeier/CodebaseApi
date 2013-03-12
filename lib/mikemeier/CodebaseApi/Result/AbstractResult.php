@@ -11,13 +11,15 @@ abstract class AbstractResult
      * @param ResponseInterface $response
      * @throws ContentTypeException
      */
-    public function __construct(ResponseInterface $response)
+    public function __construct(ResponseInterface $response = null)
     {
-        if($response->getContentType() !== "application/json"){
-            throw new ContentTypeException("No JSON received");
+        if($response){
+            if($response->getContentType() !== "application/json"){
+                throw new ContentTypeException("No JSON received");
+            }
+            $json = json_decode($response->getContent(), true);
+            $this->process($json);
         }
-        $json = json_decode($response->getContent(), true);
-        $this->process($json);
     }
 
     abstract protected function process(array $json);

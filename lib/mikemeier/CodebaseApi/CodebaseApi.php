@@ -60,13 +60,27 @@ class CodebaseApi implements CodebaseApiInterface
      */
     public function getTicketBag(TicketOptions $options)
     {
+        /* @var TicketBag[] $ticketBags */
+        $ticketBags = array();
         try {
-            $response = $this->request($this->getTicketUrl($options));
-        }catch(NotFoundException $e){
-            // Empty result - no tickets found
-            $response = new NullResponse(200, 'application/json', json_encode(array()), array());
+            $page = 1;
+            while(true){
+                $url = $this->getTicketUrl($options, $page);
+                $response = $this->request($url);
+                $ticketBags[] = new TicketBag($response);
+                $page++;
+            }
+        }catch(NotFoundException $e){}
+
+        $tickets = array();
+        foreach($ticketBags as $receivedTicketBags){
+            $tickets = array_merge($receivedTicketBags->getTickets(), $tickets);
         }
-        return new TicketBag($response);
+
+        $ticketBag = new TicketBag();
+        $ticketBag->setTickets($tickets);
+
+        return $ticketBag;
     }
 
     /**
@@ -191,9 +205,9 @@ class CodebaseApi implements CodebaseApiInterface
      * @param TicketOptions $options
      * @return string
      */
-    protected function getTicketUrl(TicketOptions $options)
+    protected function getTicketUrl(TicketOptions $options, $page = 1)
     {
-        return $this->getCodebaseUrl().'/'.$options->getProjectName().'/tickets?format=json&query='. $options->getQuery();
+        return $this->getCodebaseUrl().'/'.$options->getProjectName().'/tickets?format=json&page='. $page .'&query='. $options->getQuery();
     }
 
     /**

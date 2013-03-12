@@ -62,8 +62,8 @@ class TicketOptions
         ASSIGNEE_ME = 'me';
 
     const
-        RESOLUTION_ACTIVE = 'active',
-        RESOLUTION_RESOLVED = 'resolved';
+        RESOLUTION_OPEN = 'open',
+        RESOLUTION_CLOSED = 'closed';
 
     const
         SORT_PRIORITY = 'priority',
@@ -93,11 +93,6 @@ class TicketOptions
     protected $options = array();
 
     /**
-     * @var int
-     */
-    protected $limit;
-
-    /**
      * @param string $projectName
      * @param array $options
      * @param int $limit
@@ -115,6 +110,14 @@ class TicketOptions
             }
             $this->$method($value);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->getQuery("|");
     }
 
     /**
@@ -338,24 +341,5 @@ class TicketOptions
             $queryPieces[] = $key.':"'. $value .'"';
         }
         return implode($separator, $queryPieces);
-    }
-
-    /**
-     * @return int
-     */
-    public function getLimit()
-    {
-        return $this->limit;
-    }
-
-    /**
-     * @param int $limit
-     * @return TicketOptions
-     */
-    public function setLimit($limit)
-    {
-        $this->limit = $limit;
-
-        return $this;
     }
 }

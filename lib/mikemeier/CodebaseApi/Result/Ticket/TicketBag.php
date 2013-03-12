@@ -63,4 +63,12 @@ class TicketBag extends AbstractResult
     {
         return $this->tickets;
     }
+
+    /**
+     * @param Ticket[] $tickets
+     */
+    public function setTickets(array $tickets)
+    {
+        $this->tickets = $tickets;
+    }
 }
