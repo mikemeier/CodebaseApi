@@ -4,7 +4,6 @@ namespace mikemeier\CodebaseApi;
 
 use Payment\HttpClient\HttpClientInterface;
 use Payment\HttpClient\ResponseInterface;
-use Payment\HttpClient\NullResponse;
 
 use mikemeier\CodebaseApi\Result\Ticket\TicketBag;
 use mikemeier\CodebaseApi\Result\Ticket\TicketStatusBag;
@@ -104,7 +103,7 @@ class CodebaseApi implements CodebaseApiInterface
 
     /**
      * @param string $projectName
-     * @return Result\Ticket\TicketPriorityBag
+     * @return TicketPriorityBag
      */
     public function getTicketPriorityBag($projectName)
     {
@@ -122,12 +121,13 @@ class CodebaseApi implements CodebaseApiInterface
 
     /**
      * @param TicketUpdate $ticketUpdate
+     * @return bool
      */
     public function updateTicket(TicketUpdate $ticketUpdate)
     {
         $xml = $ticketUpdate->getXML();
 
-        $response = $this->request(
+        $this->request(
             $this->getTicketUpdateUrl($ticketUpdate->getProjectName(), $ticketUpdate->getTicketId()),
             HttpClientInterface::METHOD_POST,
             $xml,
@@ -137,7 +137,7 @@ class CodebaseApi implements CodebaseApiInterface
             )
         );
 
-        var_dump($response);
+        return true;
     }
 
     /**
@@ -203,6 +203,7 @@ class CodebaseApi implements CodebaseApiInterface
 
     /**
      * @param TicketOptions $options
+     * @param int $page
      * @return string
      */
     protected function getTicketUrl(TicketOptions $options, $page = 1)

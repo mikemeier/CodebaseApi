@@ -36,7 +36,7 @@ class CodebaseApiTest extends \PHPUnit_Framework_TestCase
         $codebaseApi = $this->getCodebaseApi();
 
         $ticketOptions = $codebaseApi->createTicketOptions($this->getProjectName(), array(
-            TicketOptions::OPTION_RESOLUTION => TicketOptions::RESOLUTION_RESOLVED,
+            TicketOptions::OPTION_RESOLUTION => TicketOptions::RESOLUTION_OPEN,
             TicketOptions::OPTION_UPDATE => new DateTime()
         ));
 
@@ -66,7 +66,6 @@ class CodebaseApiTest extends \PHPUnit_Framework_TestCase
         $codebaseApi = $this->getCodebaseApi();
 
         $update = $codebaseApi->createTicketUpdate($this->getProjectName(), 19);
-        $update->setContent('taxNumber weg, backend andere Übersetzung als Frontend für codiceFiscale, b2c checkbox weg, wenn IT ein Dealer erstellt: PW verstecken, JS Firma Hack weg: Immer Firma');
 
         //$codebaseApi->updateTicket($update);
     }
