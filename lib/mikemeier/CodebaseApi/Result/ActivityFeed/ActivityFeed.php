@@ -51,4 +51,18 @@ class ActivityFeed extends AbstractResult
             return $type == $event->getType();
         });
     }
+
+    /**
+     * @param int $id
+     * @return Event|null
+     */
+    public function getEventById($id)
+    {
+        foreach($this->getEvents() as $event){
+            if($event->getId() == $id){
+                return $event;
+            }
+        }
+        return null;
+    }
 }
