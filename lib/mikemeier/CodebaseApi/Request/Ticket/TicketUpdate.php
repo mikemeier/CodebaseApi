@@ -193,4 +193,52 @@ class TicketUpdate
     {
         return $this->schema = $this->schema ?: new Schema(__DIR__.'/Schema/TicketUpdate.xml');
     }
+
+    /**
+     * @return string
+     */
+    public function getSummary()
+    {
+        return $this->summary;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMilestoneId()
+    {
+        return $this->milestoneId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAssigneeId()
+    {
+        return $this->assigneeId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCategoryId()
+    {
+        return $this->categoryId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeAdded()
+    {
+        return $this->timeAdded;
+    }
 }

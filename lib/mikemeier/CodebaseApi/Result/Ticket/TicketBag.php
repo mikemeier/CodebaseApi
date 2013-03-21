@@ -65,6 +65,14 @@ class TicketBag extends AbstractResult
     }
 
     /**
+     * @return Ticket|null
+     */
+    public function getFirstTicket()
+    {
+        return isset($this->tickets[0]) ? $this->tickets[0] : null;
+    }
+
+    /**
      * @param Ticket[] $tickets
      */
     public function setTickets(array $tickets)

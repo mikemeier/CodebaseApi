@@ -101,6 +101,14 @@ class Ticket
     }
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->getSummary();
+    }
+
+    /**
      * @return int
      */
     public function getId()

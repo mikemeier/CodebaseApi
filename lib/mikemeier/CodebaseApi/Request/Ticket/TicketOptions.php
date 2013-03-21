@@ -95,13 +95,11 @@ class TicketOptions
     /**
      * @param string $projectName
      * @param array $options
-     * @param int $limit
      * @throws MethodNotFoundException
      */
-    public function __construct($projectName, array $options = array(), $limit = null)
+    public function __construct($projectName, array $options = array())
     {
         $this->projectName = $projectName;
-        $this->limit = $limit;
 
         foreach($options as $key => $value){
             $method = 'set'. ucfirst($key);

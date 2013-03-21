@@ -33,6 +33,11 @@ class CodebaseApi implements CodebaseApiInterface
     protected $httpClient;
 
     /**
+     * @var string
+     */
+    protected $codebaseUrl;
+
+    /**
      * @param string $username
      * @param string $key
      * @param HttpClientInterface $httpClient
@@ -42,6 +47,7 @@ class CodebaseApi implements CodebaseApiInterface
     {
         $this->authorization = 'Basic '. base64_encode($username.':'.$key);
         $this->httpClient = $httpClient;
+        $this->codebaseUrl = $codebaseUrl;
     }
 
     /**
@@ -214,9 +220,9 @@ class CodebaseApi implements CodebaseApiInterface
     /**
      * @return string
      */
-    protected function getCodebaseUrl()
+    public function getCodebaseUrl()
     {
-        return self::CODEBASE_URL;
+        return $this->codebaseUrl;
     }
 
     /**
