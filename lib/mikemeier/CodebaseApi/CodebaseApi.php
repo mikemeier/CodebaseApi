@@ -6,6 +6,7 @@ use Payment\HttpClient\HttpClientInterface;
 use Payment\HttpClient\ResponseInterface;
 
 use mikemeier\CodebaseApi\Result\Ticket\TicketBag;
+use mikemeier\CodebaseApi\Result\Ticket\TicketNoteBag;
 use mikemeier\CodebaseApi\Result\Ticket\TicketStatusBag;
 use mikemeier\CodebaseApi\Result\Ticket\TicketPriorityBag;
 use mikemeier\CodebaseApi\Result\Ticket\TicketCategoryBag;
@@ -19,6 +20,7 @@ use mikemeier\CodebaseApi\Exception\AccessDeniedException;
 use mikemeier\CodebaseApi\Exception\NotFoundException;
 use mikemeier\CodebaseApi\Exception\UnprocessableEntityException;
 use mikemeier\CodebaseApi\Exception\InvalidStatusCodeException;
+use mikemeier\CodebaseApi\Result\Ticket\TicketWatcherBag;
 
 class CodebaseApi implements CodebaseApiInterface
 {
@@ -126,6 +128,26 @@ class CodebaseApi implements CodebaseApiInterface
     }
 
     /**
+     * @param string $projectName
+     * @param string $ticketId
+     * @return TicketWatcherBag
+     */
+    public function getTicketWatchers($projectName, $ticketId)
+    {
+        return new TicketWatcherBag($this->request($this->getTicketWatcherUrl($projectName, $ticketId)));
+    }
+
+    /**
+     * @param string $projectName
+     * @param string $ticketId
+     * @return TicketNoteBag
+     */
+    public function getTicketNotes($projectName, $ticketId)
+    {
+        return new TicketNoteBag($this->request($this->getTicketNoteUrl($projectName, $ticketId)));
+    }
+
+    /**
      * @param TicketUpdate $ticketUpdate
      * @return bool
      */
@@ -169,11 +191,31 @@ class CodebaseApi implements CodebaseApiInterface
 
     /**
      * @param string $projectName
+     * @param string $ticketId
+     * @return string
+     */
+    protected function getTicketNoteUrl($projectName, $ticketId)
+    {
+        return $this->getTicketUpdateUrl($projectName, $ticketId).'?format=json';
+    }
+
+    /**
+     * @param string $projectName
      * @return string
      */
     protected function getTicketStatusesUrl($projectName)
     {
         return $this->getCodebaseUrl().'/'. $projectName .'/tickets/statuses?format=json';
+    }
+
+    /**
+     * @param $projectName
+     * @param $ticketId
+     * @return string
+     */
+    protected function getTicketWatcherUrl($projectName, $ticketId)
+    {
+        return $this->getCodebaseUrl().'/'. $projectName .'/tickets/'. $ticketId .'/watchers?format=json';
     }
 
     /**
@@ -239,7 +281,7 @@ class CodebaseApi implements CodebaseApiInterface
     protected function request($url, $method = HttpClientInterface::METHOD_GET, $content = null, array $headers = array())
     {
         $headers = array_merge($headers, array(
-            self::HTTP_AUTH_BASIC_HEADER.': '. $this->authorization
+            'Authorization: '. $this->authorization
         ));
 
         $response = $this->httpClient->request($method, $url, $content, $headers);
