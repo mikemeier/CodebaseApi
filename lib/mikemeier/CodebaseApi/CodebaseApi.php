@@ -4,7 +4,7 @@ namespace mikemeier\CodebaseApi;
 
 use Payment\HttpClient\HttpClientInterface;
 use Payment\HttpClient\ResponseInterface;
-
+use mikemeier\CodebaseApi\Result\Commit\CommitBag;
 use mikemeier\CodebaseApi\Result\Ticket\TicketBag;
 use mikemeier\CodebaseApi\Result\Ticket\TicketNoteBag;
 use mikemeier\CodebaseApi\Result\Ticket\TicketStatusBag;
@@ -132,7 +132,7 @@ class CodebaseApi implements CodebaseApiInterface
      * @param string $ticketId
      * @return TicketWatcherBag
      */
-    public function getTicketWatchers($projectName, $ticketId)
+    public function getTicketWatcherBag($projectName, $ticketId)
     {
         return new TicketWatcherBag($this->request($this->getTicketWatcherUrl($projectName, $ticketId)));
     }
@@ -142,7 +142,7 @@ class CodebaseApi implements CodebaseApiInterface
      * @param string $ticketId
      * @return TicketNoteBag
      */
-    public function getTicketNotes($projectName, $ticketId)
+    public function getTicketNoteBag($projectName, $ticketId)
     {
         return new TicketNoteBag($this->request($this->getTicketNoteUrl($projectName, $ticketId)));
     }
@@ -170,6 +170,18 @@ class CodebaseApi implements CodebaseApiInterface
 
     /**
      * @param string $projectName
+     * @param string $repositoryName
+     * @param string $ref
+     * @param string $fileOrFolder
+     * @return CommitBag
+     */
+    public function getCommitBag($projectName, $repositoryName, $ref = 'HEAD', $fileOrFolder = null)
+    {
+        return new CommitBag($this->request($this->getCommitUrl($projectName, $repositoryName, $ref, $fileOrFolder)));
+    }
+
+    /**
+     * @param string $projectName
      * @param int $ticketId
      * @param Schema $schema
      * @return TicketUpdate
@@ -187,6 +199,22 @@ class CodebaseApi implements CodebaseApiInterface
     protected function getTicketUpdateUrl($projectName, $ticketId)
     {
         return $this->getCodebaseUrl().'/'. $projectName .'/tickets/'. $ticketId.'/notes';
+    }
+
+    /**
+     * @param string $projectName
+     * @param string $repositoryName
+     * @param string $ref
+     * @param string $fileOrFolder
+     * @return string
+     */
+    protected function getCommitUrl($projectName, $repositoryName, $ref = 'HEAD', $fileOrFolder = null)
+    {
+        $url = $this->getCodebaseUrl().'/'. $projectName .'/'. $repositoryName .'/commits/'. $ref;
+        if($fileOrFolder){
+            $url .= '/'. $fileOrFolder;
+        }
+        return $url.'?format=json';
     }
 
     /**

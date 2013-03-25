@@ -34,6 +34,14 @@ class TicketUpdate
     /**
      * @return string
      */
+    public function __toString()
+    {
+        return $this->getField().': '. $this->getOldValue() .' → '. $this->getNewValue();
+    }
+
+    /**
+     * @return string
+     */
     public function getField()
     {
         return $this->field;

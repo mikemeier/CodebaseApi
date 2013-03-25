@@ -53,6 +53,22 @@ class ActivityFeed extends AbstractResult
     }
 
     /**
+     * @param DateTime $date
+     * @return Event[]
+     */
+    public function getEventsByDate(\DateTime $date)
+    {
+        $dateString = $date->format('Y-m-d');
+        $events = array();
+        foreach($this->events as $event){
+            if($event->getTimestamp()->format('Y-m-d') == $dateString){
+                $events[] = $event;
+            }
+        }
+        return $events;
+    }
+
+    /**
      * @param int $id
      * @return Event|null
      */
