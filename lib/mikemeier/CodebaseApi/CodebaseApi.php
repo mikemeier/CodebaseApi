@@ -149,7 +149,6 @@ class CodebaseApi implements CodebaseApiInterface
 
     /**
      * @param TicketUpdate $ticketUpdate
-     * @return bool
      */
     public function updateTicket(TicketUpdate $ticketUpdate)
     {
@@ -164,8 +163,6 @@ class CodebaseApi implements CodebaseApiInterface
                 'Content-Length: '. strlen($xml)
             )
         );
-
-        return true;
     }
 
     /**

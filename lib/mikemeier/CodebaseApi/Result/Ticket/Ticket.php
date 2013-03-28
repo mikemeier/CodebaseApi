@@ -149,7 +149,7 @@ class Ticket
     }
 
     /**
-     * @return TicketCategoryObject
+     * @return TicketCategory
      */
     public function getCategory()
     {
@@ -157,7 +157,7 @@ class Ticket
     }
 
     /**
-     * @return TicketPriorityObject
+     * @return TicketPriority
      */
     public function getPriority()
     {
@@ -165,7 +165,7 @@ class Ticket
     }
 
     /**
-     * @return TicketStatusObject
+     * @return TicketStatus
      */
     public function getStatus()
     {
