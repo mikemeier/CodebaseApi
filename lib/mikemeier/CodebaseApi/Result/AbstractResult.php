@@ -2,8 +2,8 @@
 
 namespace mikemeier\CodebaseApi\Result;
 
-use Payment\HttpClient\ResponseInterface;
 use mikemeier\CodebaseApi\Exception\ContentTypeException;
+use Payment\HttpClient\ResponseInterface;
 
 abstract class AbstractResult
 {
@@ -13,10 +13,7 @@ abstract class AbstractResult
      */
     public function __construct(ResponseInterface $response = null)
     {
-        if($response){
-            if($response->getContentType() !== "application/json"){
-                throw new ContentTypeException("No JSON received");
-            }
+        if ($response && false !== strpos($response->getContentType(), 'application/json')) {
             $json = json_decode($response->getContent(), true);
             $this->process($json);
         }

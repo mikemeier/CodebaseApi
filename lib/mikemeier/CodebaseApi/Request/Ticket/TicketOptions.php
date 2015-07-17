@@ -298,6 +298,25 @@ class TicketOptions
     }
 
     /**
+     * @param $priority
+     * @return TicketOptions
+     */
+    public function setPriority($priority)
+    {
+        $this->options[self::OPTION_PRIORITY] = $priority;
+        return $this;
+    }
+
+    /**
+     * @return TicketOptions
+     */
+    public function removePriority()
+    {
+        unset($this->options[self::OPTION_PRIORITY]);
+        return $this;
+    }
+
+    /**
      * @return TicketOptions
      */
     public function removeOrder()
