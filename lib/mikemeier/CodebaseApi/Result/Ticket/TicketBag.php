@@ -6,7 +6,7 @@ use mikemeier\CodebaseApi\Result\AbstractResult;
 
 use DateTime;
 
-class TicketBag extends AbstractResult
+class TicketBag extends AbstractResult implements \Countable
 {
     /**
      * @var Ticket[]
@@ -78,5 +78,13 @@ class TicketBag extends AbstractResult
     public function setTickets(array $tickets)
     {
         $this->tickets = $tickets;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->getTickets());
     }
 }

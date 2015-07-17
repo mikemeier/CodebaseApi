@@ -6,7 +6,7 @@ use mikemeier\CodebaseApi\Result\AbstractResult;
 
 use DateTime;
 
-class ActivityFeed extends AbstractResult
+class ActivityFeed extends AbstractResult implements \Countable
 {
     /**
      * @var Event[]
@@ -80,5 +80,13 @@ class ActivityFeed extends AbstractResult
             }
         }
         return null;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->getEvents());
     }
 }

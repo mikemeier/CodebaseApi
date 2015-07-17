@@ -77,7 +77,7 @@ class TicketOptions
         PRIORITY_LOW = 'low',
         PRIORITY_NORMAL = 'normal',
         PRIORITY_HIGH = 'high',
-        PRIORITY_CIRITAL = 'critical';
+        PRIORITY_CRITICAL = 'critical';
 
     const
         QUERY_OPTIONS_SEPARATOR = '%20';
@@ -343,7 +343,7 @@ class TicketOptions
             self::PRIORITY_LOW,
             self::PRIORITY_NORMAL,
             self::PRIORITY_HIGH,
-            self::PRIORITY_CIRITAL
+            self::PRIORITY_CRITICAL
         );
     }
 

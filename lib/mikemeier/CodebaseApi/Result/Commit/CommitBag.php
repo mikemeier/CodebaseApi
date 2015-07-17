@@ -4,7 +4,7 @@ namespace mikemeier\CodebaseApi\Result\Commit;
 
 use mikemeier\CodebaseApi\Result\AbstractResult;
 
-class CommitBag extends AbstractResult
+class CommitBag extends AbstractResult implements \Countable
 {
     /**
      * @var Commit[]
@@ -61,5 +61,13 @@ class CommitBag extends AbstractResult
             }
         }
         return $commits;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->getCommits());
     }
 }
